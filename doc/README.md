@@ -10,7 +10,7 @@
 
 ## 1. Configuración de Nginx
 
-Lo primero que haremos será modificar el nombre del servidor para incluir el subdominio `www`. Editamos el fichero de configuración de nuestro sitio:
+Lo primero que haremos será editar el fichero de configuración de nuestro sitio:
 
 ```
 sudo nano /etc/nginx/sites-available/luisdario.test
@@ -28,3 +28,30 @@ Una vez modificado, comprobamos que no hemos introducido ningún error de sintax
 sudo nginx -t
 sudo systemctl restart nginx
 ```
+
+## 2. Configuración del cortafuegos
+
+Para asegurar el servidor, vamos a configurar el cortafuegos `ufw`. Si no lo tenemos instalado, lo instalamos:
+
+```
+sudo apt install ufw
+```
+
+Antes de activarlo, es muy importante permitir la conexión SSH para no perder el acceso a la máquina. Después, activaremos el perfil 'Nginx Full' (que permite tráfico HTTP y HTTPS) y borraremos el perfil antiguo que solo permitía HTTP:
+
+```
+sudo ufw allow ssh
+sudo ufw allow 'Nginx Full'
+sudo ufw delete allow 'Nginx HTTP'
+```
+
+Finalmente, habilitamos el cortafuegos y comprobamos el estado:
+
+```
+sudo ufw --force enable
+sudo ufw status
+```
+
+Nos debería salir que el estado es "active" y las reglas están aplicadas correctamente:
+
+![Captura del estado de ufw](./capturas/captura1.png)
